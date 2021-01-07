@@ -1,0 +1,10 @@
+,State,District,No of wells monitored,Minimum,Maximum,0 to 2,in %,2 to 5,in %,5 to 10,in %,10 to 20,in %,20 to 40,in %,> 40,in %
+0,Uttaranchal,Almora,1,10.21,10.21,0,0%,0,0%,0,0%,1,100%,0,0%,0,0%
+1,Uttaranchal,Champawat,3,9.73,45.04,0,0%,0,0%,1,33%,1,33%,0,0%,1,33%
+2,Uttaranchal,Dehradun,47,5.10,89.75,0,0%,0,0%,9,19%,20,43%,10,21%,8,17%
+3,Uttaranchal,Haridwar,39,3.19,67.70,0,0%,9,23%,13,33%,13,33%,3,8%,1,3%
+4,Uttaranchal,Nainital,11,3.34,73.58,0,0%,1,9%,2,18%,3,27%,2,18%,3,27%
+5,Uttaranchal,Pauri Garhwal,3,25.85,91.10,0,0%,0,0%,0,0%,0,0%,1,33%,2,67%
+6,Uttaranchal,Udham Singh Nagar,45,1.94,18.21,2,4%,20,44%,15,33%,8,18%,0,0%,0,0%
+7,Uttaranchal,Uttarkashi,7,10.75,45.50,0,0%,0,0%,0,0%,4,57%,2,29%,1,14%
+8,Uttaranchal Total,156,1.94,91.10,2,0,30,0,40,0,50,0,18,0,16,0,0
