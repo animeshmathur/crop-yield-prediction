@@ -1,5 +1,7 @@
 import pandas as pd
 import numpy as np
+from scipy.stats import boxcox
+from scipy.special import inv_boxcox
 
 # Method to remove crops with zero production
 def remove_zero_production_crops(df):
@@ -72,7 +74,7 @@ def crop_woe(data, target):
     Returns Weight of Evidence table for Crop column of given target
     
     Parameters:
-    df - Data frame which should have Crop column.
+    data - Data frame which should have Crop column.
     target - Name of target.
     '''
     
@@ -94,3 +96,32 @@ def crop_woe(data, target):
     print(f"Information Value: {information_value}")
     
     return woe
+
+def convert_to_yield(data, to_boxcox=False):
+    '''
+    Returns column 'Yield' obtained from Production and Area.
+    
+    If to_boxcox = False:
+        Yield = Production / Area
+    
+    If to_boxcox = True:
+        Yield = boxcox(Production/Target) 
+        In this case, lambda value estimated for boxcox transform is returned along with new dataframe.
+    
+    Parameters:
+        data - Data frame which should have 'Production' and 'Area' columns.
+        to_boxcox (default: False) - Returns Yield with boxcox transformation along with lambda.
+    
+    Returns:
+        New dataframe with column Yield. If to_boxcox=True, also returns lambda for transformation.
+    '''
+    
+    df = data.copy()
+    
+    df['Yield'] = df['Production'] / df ['Area']
+    
+    if to_boxcox == True:
+        df['Yield'], lmda = boxcox(df['Yield'] + 1) # Add +1 to avoid 0
+        return df, lmda
+    
+    return df
