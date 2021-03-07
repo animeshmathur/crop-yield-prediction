@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import math
 from scipy.stats import boxcox
 from scipy.special import inv_boxcox
 
@@ -49,7 +50,7 @@ def identify_crop_types(df, clusterer):
     return df
 
 # Clusterer for Lat-Long
-def identify_geo_region(df, clusterer):
+def identify_geo_region(df, clusterer, ):
     '''
     Returns dataframe with column 'Geo_Region' identified from values of 'Lat' and 'Long' for each row.
     
@@ -57,19 +58,15 @@ def identify_geo_region(df, clusterer):
     df - Data frame which should have 'Lat' and 'Long' columns.
     clusterer - Clustering model for Lat and Long.
     '''
+    
     df['Geo_Region'] = clusterer.predict(df[['Lat', 'Long']])
     
-    region_map = {}
-    
-    for i, region in enumerate(df['Geo_Region'].unique()):
-        region_map[i] = f'R{i}'
-        
-    df['Geo_Region'] = df['Geo_Region'].map(region_map).copy()
+    df['Geo_Region'] = df['Geo_Region'].apply(lambda x: 'R' + str(x))
     
     return df
 
 # Returns Weight of Evidence table for Crop column of given target
-def crop_woe(data, target):
+def crop_woe(data, target, print_iv=True):
     '''
     Returns Weight of Evidence table for Crop column of given target
     
@@ -91,9 +88,9 @@ def crop_woe(data, target):
     woe = np.log((Y_per / obs_per))
     
     # Information value
-    information_value = np.sum((Y_per - obs_per) * woe)
-    
-    print(f"Information Value: {information_value}")
+    if print_iv == True:
+        information_value = np.sum((Y_per - obs_per) * woe)
+        print(f"Information Value: {information_value}")
     
     return woe
 
