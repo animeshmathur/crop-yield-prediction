@@ -76,13 +76,11 @@ class CropDataProcessor():
         
         if has_yield_column == False:
             # Create column - Yield = Production / Area
-            self.data['Yield'] = (self.data['Production'] / self.data['Area']) + 1
-            self.data = self.data.drop(['Production', 'Area'], axis=1)
+            self.data = self.convert_to_yield(self.data)
         
         self.target_transformer = PowerTransformer(method='box-cox', standardize=False)
         
-        if len(excluded_features) > 0:
-            self.data = self.data.drop(excluded_features, axis=1)
+        self.data = self.drop_excluded_features(self.data)
         
         num_scaler_pipeline = Pipeline(steps = [
             ('num-selector', FeatureSelector('numerical')),
@@ -107,12 +105,40 @@ class CropDataProcessor():
         
         self.X = self.data.drop('Yield', axis=1)
         self.y = self.data[['Yield']]
+    
+    def drop_excluded_features(self, _data):
+        data = _data.copy()
+        if len(self.excluded_features) > 0:
+            data = data.drop(self.excluded_features, axis=1)
+        return data
+        
+    def convert_to_yield(self, _data):
+        data = _data.copy()
+        data['Yield'] = (data['Production'] / data['Area']) + 1
+        data = data.drop(['Production', 'Area'], axis=1)
+        return data
         
     def process_to_train(self):
         # Normalize distribution of target
         self.y = pd.DataFrame(self.target_transformer.fit_transform(self.y), columns=['Yield'])
         self.X = self.feature_pipeline.fit_transform(self.X, self.y)
         self.preprocessed = True
+        
+    def process_to_test(self, _data):
+        test_data = _data.copy()
+        
+        test_data = self.drop_excluded_features(test_data)
+        
+        test_data = self.convert_to_yield(test_data)
+        
+        X = test_data.drop('Yield', axis=1)
+        y = test_data[['Yield']]
+        
+        # Tranform distribution of target
+        y = pd.DataFrame(self.target_transformer.transform(y), columns=['Yield'])
+        X = self.feature_pipeline.transform(X)
+        
+        return X, y
         
     def process_to_predict(self, features):
         if len(self.excluded_features) > 0:
