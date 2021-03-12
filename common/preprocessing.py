@@ -43,7 +43,7 @@ class GeoRegionTransformer( BaseEstimator, TransformerMixin ):
     def transform(self, X, y = None):
         # Cluster Lat and Long to Geo_Region (6 clusters)
         X = identify_geo_region(X, self.lat_long_clusterer)
-        X = X.drop(['Lat', 'Long', 'State', 'District'], axis=1)
+        X = X.drop(['Lat', 'Long'], axis=1)
         print('Clustered Lat-Long to Geo Region.')
         return X
 
@@ -140,9 +140,8 @@ class CropDataProcessor():
         
         return X, y
         
-    def process_to_predict(self, features):
-        if len(self.excluded_features) > 0:
-            features = features.drop(self.excluded_features, axis=1)
+    def process_to_predict(self, _features):
+        features = _features.copy()
         return self.feature_pipeline.transform(features)
         
     def get_training_data(self):
