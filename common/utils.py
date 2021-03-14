@@ -20,13 +20,22 @@ def remove_zero_production_crops(df):
 # Method to remove records for 'other...' crops
 def remove_other_crops(df):
     '''
-    Method to remove records for 'other...' crops
+    Method to remove records for 'other...' and 'Total...' crops
     
     Parameters:
     df - Dataframe which should have 'Crop' column.
     '''
+    # Remove those with word 'other'
     other_crops = [crop for crop in df['Crop'].unique() if 'other' in crop.lower()]
     df = df.loc[~df['Crop'].isin(other_crops)].reset_index(drop=True)
+    
+    # Remove those with word 'total'
+    other_crops = [crop for crop in df['Crop'].unique() if 'total' in crop.lower()]
+    df = df.loc[~df['Crop'].isin(other_crops)].reset_index(drop=True)
+    
+    # Trim spaces in name of the crop
+    df['Crop'] = df['Crop'].apply(lambda crop: crop.strip())
+    
     return df
 
 # Clusterer for Crops
